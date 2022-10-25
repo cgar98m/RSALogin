@@ -1,5 +1,7 @@
 package com.christian98gm.rsalogin;
 
+import com.christian98gm.rsalogin.network.NetworkPacketHandler;
+import com.christian98gm.rsalogin.server.handler.ServerEventHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -15,7 +17,7 @@ import org.slf4j.Logger;
 public class RSALogin
 {
     public static final String MOD_ID = "rsalogin";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public RSALogin()
     {
@@ -26,6 +28,7 @@ public class RSALogin
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
+        NetworkPacketHandler.registerPackets();
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
