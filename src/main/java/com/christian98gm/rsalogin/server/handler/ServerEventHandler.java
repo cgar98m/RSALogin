@@ -4,15 +4,18 @@ import com.christian98gm.rsalogin.RSALogin;
 import com.christian98gm.rsalogin.network.NetworkPacketHandler;
 import com.christian98gm.rsalogin.network.packet.MessageLoginRequest;
 import com.christian98gm.rsalogin.server.RSAHolder;
+import com.christian98gm.rsalogin.server.storage.RSALoginStorage;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 @OnlyIn(Dist.DEDICATED_SERVER)
@@ -20,7 +23,8 @@ import java.security.NoSuchAlgorithmException;
 public class ServerEventHandler
 {
     @SubscribeEvent
-    public static void onServerStarting(ServerStartingEvent event) {
+    public static void onServerStarting(ServerStartingEvent event)
+    {
         //Try to init RSAHolder. Close server if fails
         try {
             RSAHolder.instance();
@@ -28,6 +32,26 @@ public class ServerEventHandler
         } catch (NoSuchAlgorithmException e) {
             RSALogin.LOGGER.error("Required key pairs. Closing server...");
             event.getServer().close();
+            return;
+        }
+
+        //Try to init RSALoginStorage
+        try {
+            RSALoginStorage.instance();
+            RSALogin.LOGGER.info("Players storage available");
+        } catch (IOException e) {
+            RSALogin.LOGGER.error("Server could not access to players storage. Closing server...", e);
+            event.getServer().close();
+        }
+    }
+
+    @SubscribeEvent
+    public static void onServerStopped(ServerStoppedEvent event)
+    {
+        try {
+            RSALoginStorage.instance().storageProvider.save();
+        } catch(IOException e) {
+            RSALogin.LOGGER.error("Server could not update players storage", e);
         }
     }
 

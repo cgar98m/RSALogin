@@ -25,7 +25,7 @@ modId="rsalogin" #mandatory
 # MAJORAPI - Changing the order or variables of enums | Changing the return types of methods | Removing public methods altogether
 # MINOR - Adding items, blocks, block entities, etc. | Adding new mechanics | Deprecating public methods
 # PATCH - Bugfixes
-version="1.19.2-0.0.2.0" #mandatory
+version="1.19.2-1.0.0.0" #mandatory
  # A display name for the mod
 displayName="RSA Login" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
