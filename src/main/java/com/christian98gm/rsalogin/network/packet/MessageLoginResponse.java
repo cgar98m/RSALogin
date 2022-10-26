@@ -10,17 +10,16 @@ import java.util.function.Supplier;
 
 public class MessageLoginResponse
 {
-    private final String password;
-
-    public MessageLoginResponse(String password)
+    private final String encryptedKey;
+    public MessageLoginResponse(String encryptedKey)
     {
-        this.password = password;
+        this.encryptedKey = encryptedKey;
     }
 
     public static void encode(MessageLoginResponse msg, FriendlyByteBuf buf)
     {
-        buf.writeInt(msg.password.length());
-        buf.writeCharSequence(msg.password, StandardCharsets.UTF_8);
+        buf.writeInt(msg.encryptedKey.length());
+        buf.writeCharSequence(msg.encryptedKey, StandardCharsets.UTF_8);
     }
 
     public static MessageLoginResponse decode(FriendlyByteBuf buf)
@@ -38,8 +37,8 @@ public class MessageLoginResponse
         ctx.get().setPacketHandled(true);
     }
 
-    public String getPassword()
+    public String getEncryptedKey()
     {
-        return password;
+        return encryptedKey;
     }
 }

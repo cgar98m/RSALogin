@@ -16,7 +16,7 @@ import java.util.UUID;
 public class KeyHolder
 {
     private static KeyHolder INSTANCE;
-    public static KeyHolder instance()
+    public static KeyHolder instance() throws IOException
     {
         if(INSTANCE == null) {
             INSTANCE = new KeyHolder();
@@ -28,35 +28,28 @@ public class KeyHolder
     private static final String KEY_FILENAME = ".rsalogin_key";
     private static final Path KEY_PATH = Paths.get(BASE_PATH, KEY_FILENAME);
 
-    private String key = "";
+    private String key;
 
-    private KeyHolder()
+    private KeyHolder() throws IOException
     {
         if(Files.exists(KEY_PATH)) {
-            readKeyFromFile();
+            try {
+                key = new String(Files.readAllBytes(KEY_PATH), StandardCharsets.UTF_8);
+            } catch(IOException e) {
+                RSALogin.LOGGER.error("Failed to read key from file", e);
+                throw e;
+            }
         } else {
             key = UUID.randomUUID().toString();
-            writeKeyToFile();
-        }
-    }
-
-    private void readKeyFromFile()
-    {
-        try {
-            key = new String(Files.readAllBytes(KEY_PATH), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            RSALogin.LOGGER.error("Failed to read key from file", e);
-        }
-    }
-
-    private void writeKeyToFile()
-    {
-        try {
-            Files.write(KEY_PATH, key.getBytes(StandardCharsets.UTF_8),
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.TRUNCATE_EXISTING);
-        } catch (IOException e) {
-            RSALogin.LOGGER.error("Failed to read key from file", e);
+            try {
+                Files.write(KEY_PATH, key.getBytes(StandardCharsets.UTF_8),
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING);
+            } catch (IOException e) {
+                RSALogin.LOGGER.error("Failed to write key to file", e);
+                key = null;
+                throw e;
+            }
         }
     }
 
