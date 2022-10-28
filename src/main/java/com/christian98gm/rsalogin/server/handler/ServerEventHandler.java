@@ -60,7 +60,6 @@ public class ServerEventHandler
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event)
     {
         //Require the player to login
-        //TODO: Prevent player rejoin
         ServerPlayer player = (ServerPlayer) event.getEntity();
         try {
             RSALogin.LOGGER.info("Request " + player.getName().getString() + " login...");
