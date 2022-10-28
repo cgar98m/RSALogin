@@ -5,8 +5,8 @@ It was born because of necessity: a server of mine required a login factor and t
 
 ## Introduction
 RSALogin has two main features:
-- Identify users by a unique id. In practice, it works as a login protocol.
-- Prevent user login when another player with the same name is logged in.
+* Identify users by a unique id. In practice, it works as a login protocol.
+* Prevent user login when another player with the same name is logged in.
 
 ## How it works?
 It is based on a simple login protocol: every user has a password and uses it to identify itself (username included). However, we don't need to worry the user about password creation: RSALogin creates it. This password will be stored in **.minecraft** directory, in a file called **.rsalogin_key**.
