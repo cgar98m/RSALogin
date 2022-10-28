@@ -67,9 +67,9 @@ public class ServerPacketHandler {
                 } else {
                     if(RSALoginStorage.instance().storageProvider.isMatch(player.getName().getString(),
                             player.getStringUUID(), hashedKey)) {
-                        RSALogin.LOGGER.info("Player " + player.getName() + " login was successful");
+                        RSALogin.LOGGER.info("Player " + playerName + " login was successful");
                     } else {
-                        RSALogin.LOGGER.error("Player " + player.getName() + "'s key is invalid");
+                        RSALogin.LOGGER.error("Player " + playerName + "'s key is invalid");
                         player.connection.disconnect(
                                 Component.literal("Login required - Invalid player's key"));
                     }

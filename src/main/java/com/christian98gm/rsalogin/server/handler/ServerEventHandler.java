@@ -63,7 +63,7 @@ public class ServerEventHandler
         //TODO: Prevent player rejoin
         ServerPlayer player = (ServerPlayer) event.getEntity();
         try {
-            RSALogin.LOGGER.info("Request " + player.getName() + " login...");
+            RSALogin.LOGGER.info("Request " + player.getName().getString() + " login...");
             NetworkPacketHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
                     new MessageLoginRequest(RSAHolder.instance().getEncodedPublicKey()));
