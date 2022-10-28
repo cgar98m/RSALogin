@@ -21,12 +21,14 @@ public class ServerPacketHandler {
             //Check if is a valid player
             ServerPlayer player = ctx.get().getSender();
             if(player == null) {
+                RSALogin.LOGGER.warn("Received unexpected " + MessageLoginResponse.class.getName() + " packet");
                 return;
             }
 
             //Check non-empty content
+            String playerName = player.getName().getString();
             if(msg.getEncryptedKey().isEmpty()) {
-                RSALogin.LOGGER.error("Player " + player.getName() + " sent no key");
+                RSALogin.LOGGER.error("Player " + playerName + " sent no key");
                 player.connection.disconnect(
                         Component.literal("Login required - Player key not found"));
             }
@@ -35,9 +37,9 @@ public class ServerPacketHandler {
             String playerKey = null;
             try {
                 playerKey = RSAHolder.instance().decryptMessage(msg.getEncryptedKey());
-                RSALogin.LOGGER.debug("Player " + player.getName() + "'s key: " + playerKey);
+                RSALogin.LOGGER.debug("Player " + playerName + "'s key: " + playerKey);
             } catch (NoSuchAlgorithmException e) {
-                RSALogin.LOGGER.error("Player " + player.getName() + "'s key couldn't be decrypted");
+                RSALogin.LOGGER.error("Player " + playerName + "'s key couldn't be decrypted");
                 player.connection.disconnect(
                         Component.literal("Login required - Player's key couldn't be decrypted"));
                 return;
@@ -47,9 +49,9 @@ public class ServerPacketHandler {
             String hashedKey = null;
             try {
                 hashedKey = SHA256.hash(playerKey);
-                RSALogin.LOGGER.debug("Player " + player.getName() + "'s hashed key: " + hashedKey);
+                RSALogin.LOGGER.debug("Player " + playerName + "'s hashed key: " + hashedKey);
             } catch (NoSuchAlgorithmException e) {
-                RSALogin.LOGGER.error("Player " + player.getName() + "'s key couldn't be hashed");
+                RSALogin.LOGGER.error("Player " + playerName + "'s key couldn't be hashed");
                 player.connection.disconnect(
                         Component.literal("Login required - Player's key couldn't be hashed"));
                 return;
@@ -57,11 +59,11 @@ public class ServerPacketHandler {
 
             //Check if is a registered user
             try {
-                if(!RSALoginStorage.instance().storageProvider.isRegistered(player.getName().getString())) {
-                    RSALogin.LOGGER.info("Registering player " + player.getName() + "...");
+                if(!RSALoginStorage.instance().storageProvider.isRegistered(playerName)) {
+                    RSALogin.LOGGER.info("Registering player " + playerName + "...");
                     RSALoginStorage.instance().storageProvider.register(
-                            player.getName().getString(), player.getStringUUID(), hashedKey);
-                    RSALogin.LOGGER.info("Player " + player.getName() + " register was successful");
+                            playerName, player.getStringUUID(), hashedKey);
+                    RSALogin.LOGGER.info("Player " + playerName + " register was successful");
                 } else {
                     if(RSALoginStorage.instance().storageProvider.isMatch(player.getName().getString(),
                             player.getStringUUID(), hashedKey)) {

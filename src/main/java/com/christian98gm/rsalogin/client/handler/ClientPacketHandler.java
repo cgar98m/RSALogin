@@ -49,7 +49,7 @@ public class ClientPacketHandler
                     NetworkPacketHandler.INSTANCE.sendToServer(new MessageLoginResponse(""));
                 } catch(IOException e) {
                     //Send empty message as error identifier
-                    RSALogin.LOGGER.error("Client has no key", e);
+                    RSALogin.LOGGER.error("Client has no key");
                     NetworkPacketHandler.INSTANCE.sendToServer(new MessageLoginResponse(""));
                 }
             } catch(NoSuchAlgorithmException | InvalidKeySpecException e) {

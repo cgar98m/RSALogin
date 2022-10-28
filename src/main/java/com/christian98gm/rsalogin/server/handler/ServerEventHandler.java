@@ -50,6 +50,7 @@ public class ServerEventHandler
     {
         try {
             RSALoginStorage.instance().storageProvider.save();
+            RSALogin.LOGGER.info("Players storage updated");
         } catch(IOException e) {
             RSALogin.LOGGER.error("Server could not update players storage", e);
         }
@@ -59,6 +60,7 @@ public class ServerEventHandler
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event)
     {
         //Require the player to login
+        //TODO: Prevent player rejoin
         ServerPlayer player = (ServerPlayer) event.getEntity();
         try {
             RSALogin.LOGGER.info("Request " + player.getName() + " login...");
