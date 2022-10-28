@@ -1,6 +1,7 @@
 package com.christian98gm.rsalogin.client;
 
 import com.christian98gm.rsalogin.RSALogin;
+import cpw.mods.jarhandling.impl.Jar;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -16,12 +17,14 @@ import java.util.UUID;
 public class KeyHolder
 {
     private static KeyHolder INSTANCE;
-    public static KeyHolder instance() throws IOException
+    public static KeyHolder instance()
     {
-        if(INSTANCE == null) {
-            INSTANCE = new KeyHolder();
-        }
         return INSTANCE;
+    }
+
+    public static void initialize() throws IOException
+    {
+        INSTANCE = new KeyHolder();
     }
 
     private static final String BASE_PATH = ".";

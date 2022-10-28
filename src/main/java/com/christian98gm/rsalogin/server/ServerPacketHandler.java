@@ -1,9 +1,9 @@
-package com.christian98gm.rsalogin.server.handler;
+package com.christian98gm.rsalogin.server;
 
 import com.christian98gm.rsalogin.RSALogin;
 import com.christian98gm.rsalogin.network.packet.MessageLoginResponse;
 import com.christian98gm.rsalogin.server.RSAHolder;
-import com.christian98gm.rsalogin.server.storage.RSALoginStorage;
+import com.christian98gm.rsalogin.server.storage.RSALStorage;
 import com.christian98gm.rsalogin.utils.SHA256;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,16 +34,8 @@ public class ServerPacketHandler {
             }
 
             //Decrypt player key
-            String playerKey = null;
-            try {
-                playerKey = RSAHolder.instance().decryptMessage(msg.getEncryptedKey());
+            String playerKey  = RSAHolder.instance().decryptMessage(msg.getEncryptedKey());
                 RSALogin.LOGGER.debug("Player " + playerName + "'s key: " + playerKey);
-            } catch (NoSuchAlgorithmException e) {
-                RSALogin.LOGGER.error("Player " + playerName + "'s key couldn't be decrypted");
-                player.connection.disconnect(
-                        Component.literal("Login required - Player's key couldn't be decrypted"));
-                return;
-            }
 
             //Hash key
             String hashedKey = null;
@@ -58,25 +50,20 @@ public class ServerPacketHandler {
             }
 
             //Check if is a registered user
-            try {
-                if(!RSALoginStorage.instance().storageProvider.isRegistered(playerName)) {
-                    RSALogin.LOGGER.info("Registering player " + playerName + "...");
-                    RSALoginStorage.instance().storageProvider.register(
-                            playerName, player.getStringUUID(), hashedKey);
-                    RSALogin.LOGGER.info("Player " + playerName + " register was successful");
+            if(!RSALStorage.instance().storageProvider.isRegistered(playerName)) {
+                RSALogin.LOGGER.info("Registering player " + playerName + "...");
+                RSALStorage.instance().storageProvider.register(
+                        playerName, player.getStringUUID(), hashedKey);
+                RSALogin.LOGGER.info("Player " + playerName + " register was successful");
+            } else {
+                if(RSALStorage.instance().storageProvider.isMatch(player.getName().getString(),
+                        player.getStringUUID(), hashedKey)) {
+                    RSALogin.LOGGER.info("Player " + playerName + " login was successful");
                 } else {
-                    if(RSALoginStorage.instance().storageProvider.isMatch(player.getName().getString(),
-                            player.getStringUUID(), hashedKey)) {
-                        RSALogin.LOGGER.info("Player " + playerName + " login was successful");
-                    } else {
-                        RSALogin.LOGGER.error("Player " + playerName + "'s key is invalid");
-                        player.connection.disconnect(
-                                Component.literal("Login required - Invalid player's key"));
-                    }
+                    RSALogin.LOGGER.error("Player " + playerName + "'s key is invalid");
+                    player.connection.disconnect(
+                            Component.literal("Login required - Invalid player's key"));
                 }
-            } catch(IOException e) {    //It may not happen
-                RSALogin.LOGGER.error("Server could not access to players storage. Closing server...", e);
-                player.server.close();
             }
         }
     }

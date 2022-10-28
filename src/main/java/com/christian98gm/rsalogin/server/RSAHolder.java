@@ -15,11 +15,13 @@ import java.security.NoSuchAlgorithmException;
 public class RSAHolder {
     private static RSAHolder INSTANCE;
 
-    public static RSAHolder instance() throws NoSuchAlgorithmException {
-        if (INSTANCE == null) {
-            INSTANCE = new RSAHolder();
-        }
+    public static RSAHolder instance() {
         return INSTANCE;
+    }
+
+    public static void initialize() throws NoSuchAlgorithmException
+    {
+        INSTANCE = new RSAHolder();
     }
 
     private RSA rsa;

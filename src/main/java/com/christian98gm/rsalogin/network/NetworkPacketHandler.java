@@ -5,6 +5,8 @@ import com.christian98gm.rsalogin.network.packet.MessageLoginRequest;
 import com.christian98gm.rsalogin.network.packet.MessageLoginResponse;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
@@ -15,6 +17,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@Mod.EventBusSubscriber(modid = RSALogin.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class NetworkPacketHandler
 {
     private static final String PROTOCOL_VERSION = "1";
@@ -30,7 +33,7 @@ public class NetworkPacketHandler
         throw new UnsupportedOperationException("Instance required");
     }
 
-    public static void registerPackets()
+    public static void commonSetup(FMLCommonSetupEvent event)
     {
         registerPacket(MessageLoginRequest.class,
                 MessageLoginRequest::encode,

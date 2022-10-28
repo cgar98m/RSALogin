@@ -1,4 +1,4 @@
-package com.christian98gm.rsalogin.client.handler;
+package com.christian98gm.rsalogin.client;
 
 import com.christian98gm.rsalogin.RSALogin;
 import com.christian98gm.rsalogin.client.KeyHolder;
@@ -31,6 +31,7 @@ public class ClientPacketHandler
 
                 //Get personal key and hash it
                 try {
+                    KeyHolder.initialize();
                     String key = KeyHolder.instance().getKey();
                     String hashedKey = SHA256.hash(key);
 

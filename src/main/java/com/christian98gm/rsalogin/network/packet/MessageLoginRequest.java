@@ -1,7 +1,7 @@
 package com.christian98gm.rsalogin.network.packet;
 
 import com.christian98gm.rsalogin.RSALogin;
-import com.christian98gm.rsalogin.client.handler.ClientPacketHandler;
+import com.christian98gm.rsalogin.client.ClientPacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;

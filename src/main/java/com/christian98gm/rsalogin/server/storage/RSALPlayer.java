@@ -6,13 +6,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.Objects;
 
 @OnlyIn(Dist.DEDICATED_SERVER)
-public class RSALoginPlayer {
+public class RSALPlayer {
 
     public String name;
     public String uuid;
     public String key;
 
-    public RSALoginPlayer(String name, String uuid, String key)
+    public RSALPlayer(String name, String uuid, String key)
     {
         this.name = name;
         this.uuid = uuid;
@@ -27,7 +27,7 @@ public class RSALoginPlayer {
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-        RSALoginPlayer that = (RSALoginPlayer) o;
+        RSALPlayer that = (RSALPlayer) o;
         return Objects.equals(name, that.name) && Objects.equals(uuid, that.uuid)
                 && Objects.equals(key, that.key);
     }
